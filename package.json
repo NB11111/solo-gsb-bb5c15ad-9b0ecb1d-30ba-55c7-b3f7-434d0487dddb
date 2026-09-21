@@ -1,0 +1,13 @@
+{
+  "name": "telescope-night-planner",
+  "version": "1.0.0",
+  "private": true,
+  "description": "望远镜夜间序列规划台：按恒星时计算可见窗口，自动规避翻转/重叠/转台耗时",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

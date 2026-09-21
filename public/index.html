@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>望远镜夜间序列规划台</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>🔭 望远镜夜间序列规划台</h1>
+  <span class="sub">恒星时可见窗口 · 子午线翻转 · 转台耗时 · 冲突检测</span>
+</header>
+
+<div class="layout">
+  <aside>
+    <section class="card">
+      <h2>站点与夜晚</h2>
+      <div class="grid2">
+        <label>纬度 (°, 北正)<input id="lat" type="number" step="0.01" value="40.4"></label>
+        <label>经度 (°, 东正)<input id="lon" type="number" step="0.01" value="116.6"></label>
+        <label>观测日期<input id="date" type="date"></label>
+        <label>暮光标准
+          <select id="twilight">
+            <option value="civil">民用暮光 (-6°)</option>
+            <option value="nautical" selected>航海暮光 (-12°)</option>
+            <option value="astro">天文暮光 (-18°)</option>
+          </select>
+        </label>
+        <label>转台耗时 (min)<input id="slewMin" type="number" min="0" step="0.5" value="3"></label>
+        <label>翻转耗时 (min)<input id="flipMin" type="number" min="0" step="0.5" value="5"></label>
+        <label>赤道仪模式
+          <select id="mount">
+            <option value="gem" selected>赤道仪（过中天需翻转）</option>
+            <option value="altaz">经纬仪（无需翻转）</option>
+          </select>
+        </label>
+      </div>
+      <div class="btnrow">
+        <button id="btnPlan" class="primary">生成观测计划</button>
+        <button id="btnSamples">载入示例目标</button>
+      </div>
+      <div id="err" class="err"></div>
+    </section>
+
+    <section class="card">
+      <h2>目标列表</h2>
+      <table id="targetTable">
+        <thead>
+          <tr><th>名称</th><th>赤经(h)</th><th>赤纬(°)</th><th>曝光(min)</th><th>最低高度(°)</th><th></th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <button id="btnAdd">＋ 添加目标</button>
+    </section>
+
+    <section class="card">
+      <h2>地平线遮挡角</h2>
+      <p class="hint">单击空白添加遮挡点并拖动；右键删除点。横轴方位角（北0° 东90°），纵轴遮挡高度角。</p>
+      <canvas id="horizonCanvas"></canvas>
+      <div class="btnrow">
+        <button id="btnFlat">重置为平直地平线</button>
+        <button id="btnRidge">示例山脊轮廓</button>
+      </div>
+    </section>
+  </aside>
+
+  <main>
+    <section class="card">
+      <h2>夜间时间轴 <span id="nightInfo" class="info"></span></h2>
+      <p class="hint">拖动平移 · 滚轮缩放 · 点击目标行查看高度曲线与翻转点</p>
+      <canvas id="timeline"></canvas>
+      <div class="legend">
+        <span><i class="sw win"></i>可见窗口</span>
+        <span><i class="sw sched"></i>已排观测</span>
+        <span><i class="sw flip"></i>子午线翻转点</span>
+        <span><i class="sw gray"></i>未排入</span>
+        <button id="btnFit" class="mini">适配整夜</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>高度曲线 <span id="curveInfo" class="info"></span></h2>
+      <canvas id="curve"></canvas>
+    </section>
+
+    <section class="card">
+      <h2>观测顺序 <span id="seqInfo" class="info"></span></h2>
+      <table id="seqTable">
+        <thead><tr><th>#</th><th>目标</th><th>开始 (UTC)</th><th>结束 (UTC)</th><th>时长</th><th>翻转时刻</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>未排入目标及原因</h2>
+      <ul id="unschedList"></ul>
+    </section>
+  </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
